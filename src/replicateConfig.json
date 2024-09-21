@@ -1,0 +1,29 @@
+{
+  "models": [
+    {
+      "modelName": "01-akabane",
+      "modelId": "ness-ai/akabane-all-02:ff39d8fe5f169952aab019994b872bd46d9adc485d920421170326b455813322",
+      "modelTrigger": "in akabane"
+    },
+    {
+      "modelName": "02-kyojima",
+      "modelId": "stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+      "modelTrigger": "kyojima style"
+    },
+    {
+      "modelName": "03-jike",
+      "modelId": "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
+      "modelTrigger": "jike style"
+    },
+    {
+      "modelName": "04-jike",
+      "modelId": "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
+      "modelTrigger": "jike style"
+    },
+    {
+      "modelName": "05-samurai",
+      "modelId": "cjwbw/anything-v3.0:f410ed4c6a0c3bf8b76747860b3a3c9e4c748c4c8a14829b4b93668c69f064ae",
+      "modelTrigger": "samurai style"
+    }
+  ]
+}

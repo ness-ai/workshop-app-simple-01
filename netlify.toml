@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"  # あなたのビルドコマンドに置き換えてください
+  publish = "build"  # ビルド出力ディレクトリ、create-react-appの場合は通常 "build"
+  functions = "netlify/functions"  # サーバーレス関数のディレクトリ
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
