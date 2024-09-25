@@ -9,38 +9,45 @@ const ImageGenerationPage = ({ model }) => {
     const textareaRef = useRef(null);
   
     const generateImages = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch('/.netlify/functions/replicateProxy', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ prompt, model, num_outputs: 2 }),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to generate images');
+        setIsLoading(true);
+        setError(null);
+        try {
+          const response = await fetch('/.netlify/functions/replicateProxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, model, num_outputs: 2 }),
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+      
+          const { id, status } = await response.json();
+          
+          // 画像生成の進行状況をポーリング
+          const checkStatus = async () => {
+            const statusResponse = await fetch(`/.netlify/functions/checkReplicateStatus?id=${id}`);
+            const statusData = await statusResponse.json();
+      
+            if (statusData.status === 'succeeded') {
+              setGeneratedImages(statusData.output);
+              setIsLoading(false);
+            } else if (statusData.status === 'failed') {
+              throw new Error('Image generation failed');
+            } else {
+              // まだ生成中の場合、再度チェック
+              setTimeout(checkStatus, 2000);
+            }
+          };
+      
+          checkStatus();
+      
+        } catch (err) {
+          console.error('Error:', err);
+          setError(err.message);
+          setIsLoading(false);
         }
-  
-        const output = await response.json();
-        console.log('API response:', output);
-  
-        if (Array.isArray(output) && output.length >= 2) {
-          setGeneratedImages(output.slice(0, 2));
-        } else if (typeof output === 'object' && output.output && Array.isArray(output.output)) {
-          setGeneratedImages(output.output.slice(0, 2));
-        } else {
-          throw new Error("Unexpected output format from the API");
-        }
-      } catch (err) {
-        console.error('Error generating images:', err);
-        setError(err.message || "An error occurred while generating the images");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      };
 
     const autoResize = () => {
         if (textareaRef.current) {
