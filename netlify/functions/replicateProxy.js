@@ -29,14 +29,14 @@ exports.handler = async function(event, context) {
           prompt: `${prompt} ${model.modelTrigger}`,
           refine: "no_refiner",
           scheduler: "K_EULER",
-          lora_scale: 0.6,
+          lora_scale: 0.8,
           num_outputs: num_outputs || 1,
           guidance_scale: 7.5,
           apply_watermark: true,
           high_noise_frac: 0.8,
           negative_prompt: "",
           prompt_strength: 0.8,
-          num_inference_steps: 50
+          num_inference_steps: 30
         }
       }
     );

@@ -32,7 +32,8 @@ const Home = ({ models }) => {
       width: '50%',
       margin: '0 auto',
       borderRight: '2px solid black',
-      padding: '6vw 3vw'
+      padding: '6vw 3vw',
+      position: 'relative'
     },
     link: {
       minWidth: '100px',
@@ -161,6 +162,15 @@ const Icon = styled(FiArrowRight)`
               <Icon className="arrow-icon" />
             </StyledLink>
           ))}
+          <StyledLink
+              key={"samurai"}
+              to={'https://www.rendery.app/ja'}
+              style={styles.link}
+              target='_blank'
+            >
+              <h2 style={styles.linkTitle}>05. RENDERY</h2>
+              <Icon className="arrow-icon" />
+            </StyledLink>
         </div>
         <div style={styles.rightContainer}>
           <div style={styles.textBoxes}>
@@ -180,15 +190,15 @@ const Icon = styled(FiArrowRight)`
             {externalLinks.map((link, index) => (
               <React.Fragment key={index}>
                 <StyledLink
-          key={index}
-          to={link.url}
-          style={styles.linkSmall}
-          target='_blank'
-        >
-          <h2 style={styles.linkTitleSmall}>{link.title}</h2>
-          <IconSmall className="arrow-icon" />
-        </StyledLink>
-        {index === 1 && <div style={{height: '2rem'}} />}
+                  key={index}
+                  to={link.url}
+                  style={styles.linkSmall}
+                  target='_blank'
+                >
+                  <h2 style={styles.linkTitleSmall}>{link.title}</h2>
+                  <IconSmall className="arrow-icon" />
+                </StyledLink>
+                {index === 1 && <div style={{height: '2rem'}} />}
 
               </React.Fragment>
           

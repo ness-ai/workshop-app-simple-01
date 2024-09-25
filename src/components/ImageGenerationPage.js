@@ -39,6 +39,15 @@ const ImageGenerationPage = ({ model }) => {
           setIsLoading(false);
         }
       };
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // デフォルトの改行を防ぐ
+            if (prompt.trim() && !isLoading) {
+                generateImage();
+            }
+        }
+    };
     
       const handleDownload = async () => {
         if (generatedImage) {
@@ -230,6 +239,7 @@ const ImageGenerationPage = ({ model }) => {
                     value={prompt}
                     ref={textareaRef}
                     onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder="Enter your prompt"
                     style={styles.promptBox}
                     rows={1}
