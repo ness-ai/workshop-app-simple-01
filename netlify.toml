@@ -10,3 +10,8 @@
 
 [functions]
   node_bundler = "esbuild"
+  external_node_modules = ["replicate"]
+
+[functions."replicateProxy"]
+  included_files = ["node_modules/replicate/**"]
+  timeout = "100" 
