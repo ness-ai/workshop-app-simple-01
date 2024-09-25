@@ -1,51 +1,53 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiDownload } from "react-icons/fi";
 
 const ImageGenerationPage = ({ model }) => {
     const [prompt, setPrompt] = useState('');
-    const [generatedImages, setGeneratedImages] = useState([]);
+    const [generatedImage, setGeneratedImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const textareaRef = useRef(null);
   
-    const generateImages = async () => {
+    const generateImage = async () => {
         setIsLoading(true);
         setError(null);
         try {
           const response = await fetch('/.netlify/functions/replicateProxy', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, model, num_outputs: 2 }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ prompt, model }),
           });
-      
+    
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error('Failed to generate image');
           }
-      
-          const { id, status } = await response.json();
+    
+          const output = await response.json();
+          console.log(output);
           
-          // ポーリングで予測のステータスをチェック
-          const checkStatus = async () => {
-            const statusResponse = await fetch(`/.netlify/functions/checkPredictionStatus?id=${id}`);
-            const statusData = await statusResponse.json();
-      
-            if (statusData.status === 'succeeded') {
-              setGeneratedImages(statusData.output);
-              setIsLoading(false);
-            } else if (statusData.status === 'failed') {
-              throw new Error('Image generation failed');
-            } else {
-              // まだ生成中の場合、3秒後に再度チェック
-              setTimeout(checkStatus, 3000);
-            }
-          };
-      
-          checkStatus();
-      
+          if (Array.isArray(output) && output.length > 0) {
+            setGeneratedImage(output[0]);
+          } else {
+            setError("Unexpected output format from the API");
+          }
         } catch (err) {
-          console.error('Error:', err);
-          setError(err.message);
+          console.error('Error generating image:', err);
+          setError(err.message || "An error occurred while generating the image");
+        } finally {
           setIsLoading(false);
+        }
+      };
+    
+      const handleDownload = () => {
+        if (generatedImage) {
+          const link = document.createElement('a');
+          link.href = generatedImage;
+          link.download = `${model.modelName}-generated-image.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
         }
       };
 
@@ -82,7 +84,7 @@ const ImageGenerationPage = ({ model }) => {
         justifyContent: 'center',
         padding: '0px 20%',
         boxSizing: 'border-box',
-        gap: '2rem'
+        gap: '3rem'
     },
     imageContainer:{
         display: 'flex',
@@ -90,10 +92,12 @@ const ImageGenerationPage = ({ model }) => {
         flexGrow: '0',
         justifyContent: 'center',
         width: '100%',
-        gap: '2rem'
+        gap: '2rem',
+        position: 'relative'
     },
     imagePlaceholder: {
-        flexGrow: '1',
+        flexGrow: '0',
+        width: '50%',
         aspectRatio: '1/1',
         backgroundColor: 'white',
         border: '1px solid #ddd',
@@ -103,13 +107,12 @@ const ImageGenerationPage = ({ model }) => {
         alignItems: 'center',
         color: '#888',
         fontSize: '14px',
+        overflow: 'hidden'
       },
       image: {
-        width: '300px',
-        height: '300px',
+        width: '100%',
+        height: '100%',
         objectFit: 'cover',
-        border: '1px solid #ddd',
-        borderRadius: '4px',
       },
     promptContainer:{
         display: 'flex',
@@ -161,6 +164,21 @@ const ImageGenerationPage = ({ model }) => {
     h4Style:{
         margin: '0',
         fontWeight: '400'
+    },
+    download:{
+        position: 'absolute',
+        right: '0',
+        bottom: '0',
+        width: '4rem',
+        height: '4rem',
+        backgroundColor: 'transparent',
+        border: 'none',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s ease',
+
     }
 
   };
@@ -170,31 +188,36 @@ const ImageGenerationPage = ({ model }) => {
     <div style={styles.container}>
         <div style={styles.mainContainer}>
             <div style={styles.imageContainer}>
-            {[0, 1].map((index) => (
-          <div key={index} style={styles.imagePlaceholder}>
-            {generatedImages[index] ? (
-              <img src={generatedImages[index]} alt={`Generated ${index + 1}`} style={styles.image} />
-            ) : (
-              isLoading ? "Generating..." : "Image"
-            )}
-          </div>
-        ))}
+                <div style={styles.imagePlaceholder}>
+                    {generatedImage ? (
+                        <img src={generatedImage} alt="Generated" style={styles.image} />
+                    ) : (
+                        isLoading ? "Generating..." : "Image"
+                    )}
+                </div>
+                <button
+                    onClick={handleDownload}
+                    style={styles.download}
+                >
+                    <FiDownload size={30} color={"#333"} />
+                </button>
+
             </div>
+            {error && <div style={{color: 'red', textAlign: 'center'}}>{error}</div>}
             <div style={styles.promptContainer}>
                 <textarea
                     value={prompt}
                     ref={textareaRef}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="prompt"
+                    placeholder="Enter your prompt"
                     style={styles.promptBox}
                     rows={1}
-                    />
-                    
+                />
                 <button
-                    onClick={generateImages}
-                    disabled={isLoading}
-                    style={styles.button}
-                    >
+                    onClick={generateImage}
+                    disabled={isLoading || !prompt.trim()}
+                    style={{...styles.button, opacity: isLoading || !prompt.trim() ? 0.5 : 1}}
+                >
                     <FiArrowRight size={30} color={isLoading ? "#ccc" : "#333"} />
                 </button>
             </div>
@@ -204,8 +227,7 @@ const ImageGenerationPage = ({ model }) => {
             <h4 style={styles.h4Style}>NESS WORKSHOP APP</h4>
         </div>
     </div>
-
-  );
+);
 
   
 };
