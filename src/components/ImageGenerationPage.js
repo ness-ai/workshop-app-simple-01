@@ -40,14 +40,35 @@ const ImageGenerationPage = ({ model }) => {
         }
       };
     
-      const handleDownload = () => {
+      const handleDownload = async () => {
         if (generatedImage) {
-          const link = document.createElement('a');
-          link.href = generatedImage;
-          link.download = `${model.modelName}-generated-image.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          try {
+            setIsLoading(true); // オプション: ダウンロード中はローディング状態にする
+            
+            // 画像をフェッチしてブロブとして取得
+            const response = await fetch(generatedImage);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const blob = await response.blob();
+            
+            // ブロブからオブジェクトURLを作成
+            const url = window.URL.createObjectURL(blob);
+            
+            // リンク要素を作成し、クリックイベントをシミュレート
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${prompt}, ${model.modelTrigger}.png`;
+            document.body.appendChild(link);
+            link.click();
+            
+            // クリーンアップ
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          } catch (error) {
+            console.error('Download failed:', error);
+            setError('Failed to download the image. Please try again.'); // エラー状態を設定
+          } finally {
+            setIsLoading(false); // ローディング状態を解除
+          }
         }
       };
 
