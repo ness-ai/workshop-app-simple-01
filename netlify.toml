@@ -14,4 +14,4 @@
 
 [functions."replicateProxy"]
   included_files = ["node_modules/replicate/**"]
-  timeout = "100" 
+  timeout = "100000" 

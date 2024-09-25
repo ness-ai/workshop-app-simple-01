@@ -24,9 +24,9 @@ const ImageGenerationPage = ({ model }) => {
       
           const { id, status } = await response.json();
           
-          // 画像生成の進行状況をポーリング
+          // ポーリングで予測のステータスをチェック
           const checkStatus = async () => {
-            const statusResponse = await fetch(`/.netlify/functions/checkReplicateStatus?id=${id}`);
+            const statusResponse = await fetch(`/.netlify/functions/checkPredictionStatus?id=${id}`);
             const statusData = await statusResponse.json();
       
             if (statusData.status === 'succeeded') {
@@ -35,8 +35,8 @@ const ImageGenerationPage = ({ model }) => {
             } else if (statusData.status === 'failed') {
               throw new Error('Image generation failed');
             } else {
-              // まだ生成中の場合、再度チェック
-              setTimeout(checkStatus, 2000);
+              // まだ生成中の場合、3秒後に再度チェック
+              setTimeout(checkStatus, 3000);
             }
           };
       
