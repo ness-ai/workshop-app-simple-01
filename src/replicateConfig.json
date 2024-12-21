@@ -19,6 +19,11 @@
       "modelName": "04. JIKE",
       "modelId": "ness-ai/jike-01:e93a59ddd8b4699aa09837b0f695b3ab641aa92d5913fa8af2d22adef8c9bca0",
       "modelTrigger": "in Jike"
+    },
+    {
+      "modelName": "05. HATOGAYA",
+      "modelId": "ness-ai/hatogaya-01:1c81d53670983641cdf2af958895235ff45b11d892ced9128aa0ad470f9bc1cf",
+      "modelTrigger": "in Hatogaya"
     }
   ]
 }

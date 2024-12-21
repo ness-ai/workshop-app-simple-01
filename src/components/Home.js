@@ -168,7 +168,7 @@ const Icon = styled(FiArrowRight)`
               style={styles.link}
               target='_blank'
             >
-              <h2 style={styles.linkTitle}>05. RENDERY</h2>
+              <h2 style={styles.linkTitle}>XX. RENDERY</h2>
               <Icon className="arrow-icon" />
             </StyledLink>
         </div>
