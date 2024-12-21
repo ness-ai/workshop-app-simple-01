@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/workshop-app-simple-01/static/css/main.482db4ff.css",
-    "main.js": "/workshop-app-simple-01/static/js/main.2fd93099.js",
-    "static/js/453.a06c7fd1.chunk.js": "/workshop-app-simple-01/static/js/453.a06c7fd1.chunk.js",
-    "index.html": "/workshop-app-simple-01/index.html",
-    "main.482db4ff.css.map": "/workshop-app-simple-01/static/css/main.482db4ff.css.map",
-    "main.2fd93099.js.map": "/workshop-app-simple-01/static/js/main.2fd93099.js.map",
-    "453.a06c7fd1.chunk.js.map": "/workshop-app-simple-01/static/js/453.a06c7fd1.chunk.js.map"
+    "main.css": "/static/css/main.482db4ff.css",
+    "main.js": "/static/js/main.b44d2e51.js",
+    "static/js/453.a06c7fd1.chunk.js": "/static/js/453.a06c7fd1.chunk.js",
+    "index.html": "/index.html",
+    "main.482db4ff.css.map": "/static/css/main.482db4ff.css.map",
+    "main.b44d2e51.js.map": "/static/js/main.b44d2e51.js.map",
+    "453.a06c7fd1.chunk.js.map": "/static/js/453.a06c7fd1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.482db4ff.css",
-    "static/js/main.2fd93099.js"
+    "static/js/main.b44d2e51.js"
   ]
 }
